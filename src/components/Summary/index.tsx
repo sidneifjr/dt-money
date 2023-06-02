@@ -2,16 +2,18 @@ import { ArrowCircleDown, ArrowCircleUp, CurrencyDollar } from "phosphor-react";
 import { SummaryCard, SummaryContainer } from "./styles";
 import { useContext } from "react";
 import { TransactionsContext } from "../../contexts/TransactionsContext";
+import { priceFormatter } from "../../util/formatter";
 
 export function Summary() {
   const { transactions } = useContext(TransactionsContext)
 
-  // reduce() permite percorrer um array e reduzir o mesmo a uma nova estrutura de dados.
-  // Ou seja: quero reduzir meu transactions, à essa estrutura de dados:
-  // { income: 0, outcome: 0, total: 0 }
-
-  // acc -> accumulator. Refere-se ao objeto { income: 0, outcome: 0, total: 0 }.
-  // Todas as operações no reducer, farei no accumulator.
+  /**
+   * reduce() permite percorrer um array e reduzir o mesmo a uma nova estrutura de dados.
+   * Ou seja: quero adaptár o meu transactions à essa estrutura de dados:
+   * { income: 0, outcome: 0, total: 0 }
+   * acc -> accumulator. Refere-se ao objeto { income: 0, outcome: 0, total: 0 }.
+   * Todas as operações no reducer, farei no accumulator.
+   */
   const summary = transactions.reduce((acc, transaction) => {
     if(transaction.type === 'income'){
       acc.income += transaction.price;
@@ -34,7 +36,7 @@ export function Summary() {
           <ArrowCircleUp size={32} color="#00b37e" />
         </header>
 
-        <strong>{summary.income}</strong>
+        <strong>{priceFormatter.format(summary.income)}</strong>
       </SummaryCard>
 
       <SummaryCard>
@@ -43,7 +45,7 @@ export function Summary() {
           <ArrowCircleDown size={32} color="#f75a68" />
         </header>
 
-        <strong>{summary.outcome}</strong>
+        <strong>{priceFormatter.format(summary.outcome)}</strong>
       </SummaryCard>
 
       <SummaryCard variant="green">
@@ -52,7 +54,7 @@ export function Summary() {
           <CurrencyDollar size={32} color="#ffffff" />
         </header>
 
-        <strong>{summary.total}</strong>
+        <strong>{priceFormatter.format(summary.total)}</strong>
       </SummaryCard>
     </SummaryContainer>
   )
